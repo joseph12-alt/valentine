@@ -1,250 +1,184 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Will you be my Valentine? 💗</title>
-  <style>
-    :root{
-      --bg1:#ffb3d9;
-      --bg2:#ff7fc8;
-      --card:#ffffff;
-      --text:#8a0f44;
-      --yes1:#ff4fa0;
-      --yes2:#d81b72;
-      --shadow: 0 18px 45px rgba(0,0,0,.15);
-    }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Will you be my Valentine 💗</title>
 
-    *{ box-sizing:border-box; }
-    body{
-      margin:0;
-      min-height:100vh;
-      display:grid;
-      place-items:center;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      background: linear-gradient(180deg, var(--bg1), var(--bg2));
-      overflow:hidden;
-    }
+<style>
+:root{
+  --pink1:#ffb3d9;
+  --pink2:#ff7fc8;
+  --yes1:#ff4fa0;
+  --yes2:#d81b72;
+}
 
-    .card{
-      width:min(520px, 92vw);
-      background: var(--card);
-      border-radius: 22px;
-      box-shadow: var(--shadow);
-      padding: 28px 22px 22px;
-      text-align:center;
-      position: relative;
-    }
+*{box-sizing:border-box}
 
-    .icon{
-      width:42px; height:42px;
-      border-radius: 50%;
-      display:grid;
-      place-items:center;
-      margin: 0 auto 10px;
-      background: #ffe1f1;
-      border: 1px solid #ffd0e8;
-      overflow:hidden;
-    }
-    .icon img{
-      width:100%; height:100%;
-      object-fit:cover;
-      display:block;
-    }
-    .icon span{
-      font-size: 22px;
-      line-height: 1;
-    }
+body{
+  margin:0;
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  background: linear-gradient(180deg, var(--pink1), var(--pink2));
+}
 
-    h1{
-      margin: 0 0 10px;
-      font-size: clamp(20px, 3.8vw, 28px);
-      color: var(--text);
-      font-weight: 700;
-    }
+.card{
+  width:min(520px,92vw);
+  background:#fff;
+  border-radius:22px;
+  padding:26px 22px 22px;
+  text-align:center;
+  box-shadow:0 18px 45px rgba(0,0,0,.15);
+  position:relative;
+}
 
-    /* Buttons area (matches the video feel) */
-    .zone{
-      margin-top: 18px;
-      position: relative;
-      height: 88px;            /* enough space for No to run */
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
+/* Image circle */
+.avatar{
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  overflow:hidden;
+  margin:0 auto 10px;
+  border:3px solid #ffd0e8;
+}
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
 
-    #yes{
-      border:0;
-      padding: 14px 34px;
-      border-radius: 999px;
-      font-size: 18px;
-      font-weight: 700;
-      color:#fff;
-      background: linear-gradient(180deg, var(--yes1), var(--yes2));
-      box-shadow: 0 12px 20px rgba(216,27,114,.25);
-      cursor:pointer;
-      transition: transform .15s ease, filter .15s ease;
-      user-select:none;
-    }
-    #yes:hover{ filter:brightness(1.03); transform: translateY(-1px); }
+h1{
+  margin:0 0 14px;
+  font-size:clamp(20px,4vw,28px);
+  color:#8a0f44;
+}
 
-    /* No button: small + initially "a bit away" to the right */
-    #no{
-      position:absolute;
-      left: 66%;               /* starts a bit far from YES */
-      top: 50%;
-      transform: translateY(-50%);
-      border:0;
-      background: transparent;
-      color: #b65b84;
-      font-size: 14px;
-      padding: 8px 10px;
-      border-radius: 10px;
-      cursor:pointer;
-      user-select:none;
-      opacity: .9;
-    }
-    #no:hover{ opacity: 1; }
+.zone{
+  position:relative;
+  height:90px;
+  margin-top:10px;
+}
 
-    .success{
-      display:none;
-      margin-top: 16px;
-      padding: 12px 14px;
-      border-radius: 14px;
-      background:#e8fff1;
-      border:1px solid #baf3cc;
-      color:#0e6b2c;
-      font-weight: 650;
-    }
+#yes{
+  border:0;
+  padding:14px 36px;
+  border-radius:999px;
+  font-size:18px;
+  font-weight:700;
+  color:#fff;
+  background:linear-gradient(180deg,var(--yes1),var(--yes2));
+  box-shadow:0 12px 20px rgba(216,27,114,.25);
+  cursor:pointer;
+}
 
-    /* Confetti */
-    .confetti{ position:fixed; inset:0; pointer-events:none; }
-    .piece{
-      position:absolute; top:-10px;
-      width:10px; height:14px;
-      border-radius:3px;
-      opacity:.95;
-      animation: fall linear forwards;
-    }
-    @keyframes fall{
-      to { transform: translateY(110vh) rotate(720deg); }
-    }
-  </style>
+#no{
+  position:absolute;
+  left:65%;
+  top:50%;
+  transform:translateY(-50%);
+  background:transparent;
+  border:0;
+  font-size:14px;
+  color:#b65b84;
+  cursor:pointer;
+}
+
+.success{
+  display:none;
+  margin-top:16px;
+  padding:12px;
+  background:#e8fff1;
+  border-radius:14px;
+  border:1px solid #baf3cc;
+  color:#0e6b2c;
+  font-weight:600;
+}
+
+/* Confetti */
+.confetti{position:fixed; inset:0; pointer-events:none;}
+.piece{
+  position:absolute;
+  top:-10px;
+  width:10px;
+  height:14px;
+  border-radius:3px;
+  animation:fall linear forwards;
+}
+@keyframes fall{
+  to{transform:translateY(110vh) rotate(720deg);}
+}
+</style>
 </head>
+
 <body>
 
-  <div class="card" id="card">
-    <div class="icon" id="iconBox">
-      <!-- if no image URL, will show emoji -->
-      <span id="iconEmoji">🐱</span>
-      <img id="iconImg" alt="" style="display:none;">
-    </div>
-
-    <h1 id="question">Will you be my Valentine? 💗</h1>
-
-    <div class="zone" id="zone">
-      <button id="yes">Yes! 💕</button>
-      <button id="no">No</button>
-    </div>
-
-    <div class="success" id="success">Yaaay! 💞 You just made my day 😌</div>
+<div class="card">
+  <div class="avatar">
+    <img src="love.jpg" alt="">
   </div>
 
-  <div class="confetti" id="confetti"></div>
+  <h1>Mariomty, will you be my Valentine? 💗</h1>
 
-  <script>
-    // =========================
-    //  EDIT HERE (name + image)
-    // =========================
-    const RECIPIENT_NAME = "Mariomty";   // <-- change name here
-    const ICON_IMAGE_URL = "";          // <-- put image/gif url here OR leave empty to keep 🐱
-    // Example:
-    // const ICON_IMAGE_URL = "https://media.giphy.com/media/..."
+  <div class="zone" id="zone">
+    <button id="yes">Yes 💕</button>
+    <button id="no">No</button>
+  </div>
 
+  <div class="success" id="success">
+    Yaaay 💞 You made my day 😌
+  </div>
+</div>
 
-    // Apply text + icon
-    const question = document.getElementById("question");
-    question.textContent = `${RECIPIENT_NAME}, will you be my Valentine? 💗`;
+<div class="confetti" id="confetti"></div>
 
-    const iconImg = document.getElementById("iconImg");
-    const iconEmoji = document.getElementById("iconEmoji");
-    if (ICON_IMAGE_URL && ICON_IMAGE_URL.trim()){
-      iconImg.src = ICON_IMAGE_URL.trim();
-      iconImg.style.display = "block";
-      iconEmoji.style.display = "none";
-    }
+<script>
+const zone = document.getElementById("zone");
+const noBtn = document.getElementById("no");
+const yesBtn = document.getElementById("yes");
+const success = document.getElementById("success");
+const confetti = document.getElementById("confetti");
 
-    const zone = document.getElementById("zone");
-    const card = document.getElementById("card");
-    const noBtn = document.getElementById("no");
-    const yesBtn = document.getElementById("yes");
-    const success = document.getElementById("success");
-    const confetti = document.getElementById("confetti");
+function moveNo(){
+  const z = zone.getBoundingClientRect();
+  const pad = 6;
 
-    // Make NO run away (like the video)
-    function moveNoAway(){
-      const z = zone.getBoundingClientRect();
-      const yes = yesBtn.getBoundingClientRect();
+  const x = pad + Math.random()*(z.width - noBtn.offsetWidth - pad*2);
+  const y = pad + Math.random()*(z.height - noBtn.offsetHeight - pad*2);
 
-      const pad = 8;
-      const maxX = z.width - noBtn.offsetWidth - pad*2;
-      const maxY = z.height - noBtn.offsetHeight - pad*2;
+  noBtn.style.left = x+"px";
+  noBtn.style.top  = y+"px";
+  noBtn.style.transform = "translate(0,0)";
+}
 
-      let x, y, tries = 0;
+noBtn.addEventListener("mouseenter", moveNo);
+noBtn.addEventListener("touchstart", e=>{
+  e.preventDefault();
+  moveNo();
+},{passive:false});
 
-      do {
-        x = pad + Math.random() * Math.max(0, maxX);
-        y = pad + Math.random() * Math.max(0, maxY);
+yesBtn.addEventListener("click", ()=>{
+  success.style.display="block";
+  noBtn.style.display="none";
+  yesBtn.textContent="YES ✅";
+  yesBtn.disabled=true;
+  fireConfetti();
+});
 
-        // keep distance from YES so it's "far"
-        const noCX = z.left + x + noBtn.offsetWidth/2;
-        const noCY = z.top  + y + noBtn.offsetHeight/2;
-        const yesCX = yes.left + yes.width/2;
-        const yesCY = yes.top  + yes.height/2;
-
-        const dist = Math.hypot(noCX - yesCX, noCY - yesCY);
-        if (dist > 170) break;     // enforce "far away"
-        tries++;
-      } while (tries < 25);
-
-      noBtn.style.left = x + "px";
-      noBtn.style.top  = y + "px";
-      noBtn.style.transform = "translate(0,0)"; // override initial translate
-    }
-
-    // Desktop hover
-    noBtn.addEventListener("mouseenter", moveNoAway);
-
-    // Mobile touch
-    noBtn.addEventListener("touchstart", (e) => {
-      e.preventDefault();
-      moveNoAway();
-    }, { passive:false });
-
-    // YES action
-    yesBtn.addEventListener("click", () => {
-      success.style.display = "block";
-      noBtn.style.display = "none";
-      yesBtn.textContent = "YES ✅";
-      yesBtn.disabled = true;
-      burstConfetti(140);
-    });
-
-    function burstConfetti(n=100){
-      confetti.innerHTML = "";
-      const colors = ["#ff4fa0","#ffd1e8","#ffb703","#8338ec","#3a86ff","#06d6a0"];
-      for (let i=0;i<n;i++){
-        const d = document.createElement("div");
-        d.className = "piece";
-        d.style.left = (Math.random()*100) + "vw";
-        d.style.background = colors[Math.floor(Math.random()*colors.length)];
-        d.style.animationDuration = (2.2 + Math.random()*2.2) + "s";
-        d.style.animationDelay = (Math.random()*0.25) + "s";
-        confetti.appendChild(d);
-      }
-      setTimeout(()=> confetti.innerHTML="", 5200);
-    }
-  </script>
+function fireConfetti(){
+  const colors=["#ff4fa0","#ffd1e8","#ffb703","#8338ec","#3a86ff"];
+  for(let i=0;i<120;i++){
+    const d=document.createElement("div");
+    d.className="piece";
+    d.style.left=Math.random()*100+"vw";
+    d.style.background=colors[Math.floor(Math.random()*colors.length)];
+    d.style.animationDuration=(2+Math.random()*2)+"s";
+    confetti.appendChild(d);
+  }
+  setTimeout(()=>confetti.innerHTML="",5000);
+}
+</script>
 
 </body>
 </html>
