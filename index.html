@@ -11,8 +11,13 @@
   --pink2:#ff7fc8;
   --card:#ffffff;
   --text:#8a0f44;
+
   --yes1:#ff4fa0;
   --yes2:#d81b72;
+
+  --noBg:#fff0f7;
+  --noBorder:#ffb6d9;
+  --noText:#b04179;
 }
 
 *{box-sizing:border-box}
@@ -26,7 +31,6 @@ body{
   overflow:hidden;
 }
 
-/* Main card */
 .card{
   width:min(560px,92vw);
   background:var(--card);
@@ -37,13 +41,13 @@ body{
   position:relative;
 }
 
-/* avatar circle (first screen) */
 .avatar{
   width:70px; height:70px;
   border-radius:50%;
   overflow:hidden;
   margin:0 auto 10px;
   border:3px solid #ffd0e8;
+  background:#ffe6f3;
 }
 .avatar img{width:100%;height:100%;object-fit:cover;display:block}
 
@@ -55,35 +59,96 @@ h1{
 
 .zone{
   position:relative;
-  height:90px;
+  height:110px;
   margin-top:8px;
 }
 
-/* buttons */
 #yes{
   border:0;
   padding:14px 36px;
   border-radius:999px;
   font-size:18px;
-  font-weight:700;
+  font-weight:800;
   color:#fff;
   background:linear-gradient(180deg,var(--yes1),var(--yes2));
   box-shadow:0 12px 20px rgba(216,27,114,.25);
   cursor:pointer;
+  transition: transform .15s ease, filter .15s ease;
 }
+#yes:hover{ filter:brightness(1.03); transform:translateY(-1px); }
+
+/* Cute NO (smaller) */
 #no{
   position:absolute;
-  left:65%;
+  left:68%;
   top:50%;
   transform:translateY(-50%);
-  background:transparent;
-  border:0;
-  font-size:14px;
-  color:#b65b84;
+  padding:9px 14px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:700;
+  color:var(--noText);
+  background: var(--noBg);
+  border: 2px solid var(--noBorder);
   cursor:pointer;
+  box-shadow: 0 10px 18px rgba(0,0,0,.08);
+  transition: transform .12s ease;
+}
+#no:active{ transform: translateY(-50%) scale(.98); }
+
+/* Message bubble under buttons */
+.bubble{
+  margin: 14px auto 0;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 12px;
+  border-radius:14px;
+  background:#fff6fb;
+  border:1px solid #ffd0e8;
+  color:#7a2a50;
+  font-size:13px;
+  opacity:0;
+  transform: translateY(6px);
+  transition: opacity .15s ease, transform .15s ease;
+}
+.bubble.show{
+  opacity:1;
+  transform: translateY(0);
+}
+.bubble .dot{
+  width:8px; height:8px; border-radius:50%;
+  background:#ff4fa0;
 }
 
-/* YAY card (second screen) */
+/* YES loading overlay */
+.overlay{
+  position:absolute;
+  inset:0;
+  border-radius:22px;
+  background: rgba(255,255,255,.75);
+  backdrop-filter: blur(6px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:12px;
+}
+.loaderText{ color:#7a2a50; font-weight:700; font-size:14px; }
+
+/* Pink heart pulse */
+.pulseHeart{
+  font-size:54px;
+  animation: pulse 0.9s ease-in-out infinite;
+  filter: drop-shadow(0 10px 18px rgba(216,27,114,.25));
+}
+@keyframes pulse{
+  0%{ transform: scale(1); }
+  50%{ transform: scale(1.18); }
+  100%{ transform: scale(1); }
+}
+
+/* YAY screen */
 .yay-title{
   font-size:48px;
   letter-spacing:1px;
@@ -97,24 +162,21 @@ h1{
 }
 .quote{
   margin:0 auto 14px;
-  max-width: 360px;
+  max-width: 380px;
   color:#6f2a4a;
   font-size:15px;
   line-height:1.35;
 }
 .photo-box{
-  width: 180px;
-  height: 180px;
-  border-radius: 16px;
+  width: 190px;
+  height: 190px;
+  border-radius: 18px;
   overflow:hidden;
   margin: 10px auto 14px;
   border: 1px solid #ffd0e8;
   box-shadow: 0 10px 25px rgba(0,0,0,.12);
 }
-.photo-box img{
-  width:100%; height:100%;
-  object-fit:cover;
-}
+.photo-box img{ width:100%; height:100%; object-fit:cover; }
 .fromline{
   margin:0;
   color:#6f2a4a;
@@ -129,9 +191,7 @@ h1{
   border-radius:3px;
   animation:fall linear forwards;
 }
-@keyframes fall{
-  to{transform:translateY(110vh) rotate(720deg);}
-}
+@keyframes fall{ to{ transform:translateY(110vh) rotate(720deg); } }
 </style>
 </head>
 
@@ -139,15 +199,23 @@ h1{
 
 <!-- Screen 1 -->
 <div class="card" id="screenAsk">
-  <div class="avatar">
-    <img src="love.jpg" alt="">
-  </div>
+  <div class="avatar"><img id="iconImg" src="icon.jpg" alt=""></div>
 
   <h1 id="askText">Mariomty, will you be my Valentine? 💗</h1>
 
   <div class="zone" id="zone">
     <button id="yes">Yes 💕</button>
-    <button id="no">No</button>
+    <button id="no">No 🙈</button>
+  </div>
+
+  <div class="bubble" id="bubble">
+    <span class="dot"></span>
+    <span id="bubbleText">Nice try 😄</span>
+  </div>
+
+  <div class="overlay" id="overlay">
+    <div class="pulseHeart">💗</div>
+    <div class="loaderText">One sec…</div>
   </div>
 </div>
 
@@ -158,7 +226,7 @@ h1{
   <p class="quote">The ring on your finger won't make you say no🥺</p>
 
   <div class="photo-box">
-    <img src="love.jpg" alt="">
+    <img id="cardImg" src="card.jpg" alt="">
   </div>
 
   <p class="fromline" id="fromLine">From Zozza, to Mariam 💕</p>
@@ -168,48 +236,105 @@ h1{
 
 <script>
 /* ===== EDIT HERE ===== */
-const ASK_NAME = "Mariomty";     // name in question
-const FROM_NAME = "Zozza";       // from
-const TO_NAME   = "Mariam";      // to
-const PHOTO_FILE = "love.jpg";   // image file in repo
+const ASK_NAME = "Mariomty";
+const FROM_NAME = "Zozza";
+const TO_NAME = "Mariam";
+
+/* files in repo */
+const ICON_FILE = "icon.jpg";   // circle icon
+const CARD_FILE = "card.jpg";   // photo inside YAY
 
 document.getElementById("askText").textContent = `${ASK_NAME}, will you be my Valentine? 💗`;
 document.getElementById("fromLine").textContent = `From ${FROM_NAME}, to ${TO_NAME} 💕`;
-
-// Make sure both images use the same photo
-document.querySelectorAll('img').forEach(img => img.src = PHOTO_FILE);
+document.getElementById("iconImg").src = ICON_FILE;
+document.getElementById("cardImg").src = CARD_FILE;
 
 const zone = document.getElementById("zone");
 const noBtn = document.getElementById("no");
 const yesBtn = document.getElementById("yes");
+const bubble = document.getElementById("bubble");
+const bubbleText = document.getElementById("bubbleText");
+const overlay = document.getElementById("overlay");
 const confetti = document.getElementById("confetti");
 
-function moveNo(){
+const noMessages = [
+  "Still trying? 😄",
+  "Nope 😌",
+  "Almost… but no 🙈",
+  "You can’t catch me 😅",
+  "Just press YES 💗",
+  "Okay… last chance 😇"
+];
+let noCount = 0;
+
+function showBubble(msg){
+  bubbleText.textContent = msg;
+  bubble.classList.add("show");
+  clearTimeout(showBubble._t);
+  showBubble._t = setTimeout(()=> bubble.classList.remove("show"), 1200);
+}
+
+function moveNoFar(){
   const z = zone.getBoundingClientRect();
+  const yes = yesBtn.getBoundingClientRect();
   const pad = 6;
-  const x = pad + Math.random()*(z.width - noBtn.offsetWidth - pad*2);
-  const y = pad + Math.random()*(z.height - noBtn.offsetHeight - pad*2);
+
+  const maxX = z.width - noBtn.offsetWidth - pad*2;
+  const maxY = z.height - noBtn.offsetHeight - pad*2;
+
+  let x, y, tries = 0;
+  do{
+    x = pad + Math.random()*Math.max(0, maxX);
+    y = pad + Math.random()*Math.max(0, maxY);
+
+    // keep away from YES
+    const noCX = z.left + x + noBtn.offsetWidth/2;
+    const noCY = z.top  + y + noBtn.offsetHeight/2;
+    const yesCX = yes.left + yes.width/2;
+    const yesCY = yes.top  + yes.height/2;
+
+    const dist = Math.hypot(noCX-yesCX, noCY-yesCY);
+    if(dist > 170) break;
+    tries++;
+  }while(tries < 25);
+
   noBtn.style.left = x+"px";
   noBtn.style.top  = y+"px";
   noBtn.style.transform = "translate(0,0)";
 }
 
-// NO runs away
-noBtn.addEventListener("mouseenter", moveNo);
-noBtn.addEventListener("touchstart", e=>{ e.preventDefault(); moveNo(); }, {passive:false});
+function onNoAttempt(e){
+  if(e) e.preventDefault();
+  const msg = noMessages[Math.min(noCount, noMessages.length-1)];
+  showBubble(msg);
+  noCount++;
+  moveNoFar();
+}
 
-// YES switches screen
+noBtn.addEventListener("mouseenter", onNoAttempt);
+noBtn.addEventListener("click", onNoAttempt);
+noBtn.addEventListener("touchstart", onNoAttempt, {passive:false});
+
 yesBtn.addEventListener("click", ()=>{
-  document.getElementById("screenAsk").style.display = "none";
-  document.getElementById("screenYay").style.display = "block";
-  fireConfetti();
+  // disable buttons while loading
+  yesBtn.disabled = true;
+  noBtn.disabled = true;
+
+  overlay.style.display = "flex";
+
+  // 2 seconds loading
+  setTimeout(()=>{
+    overlay.style.display = "none";
+    document.getElementById("screenAsk").style.display = "none";
+    document.getElementById("screenYay").style.display = "block";
+    fireConfetti();
+  }, 2000);
 });
 
-// Confetti burst
 function fireConfetti(){
   confetti.innerHTML = "";
-  const colors=["#ff4fa0","#ffd1e8","#ffb703","#8338ec","#3a86ff"];
-  for(let i=0;i<140;i++){
+  const colors=["#ff4fa0","#ffd1e8","#ffb703","#8338ec","#3a86ff","#06d6a0"];
+  for(let i=0;i<150;i++){
     const d=document.createElement("div");
     d.className="piece";
     d.style.left=Math.random()*100+"vw";
