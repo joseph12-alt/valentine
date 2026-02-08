@@ -9,12 +9,13 @@
 :root{
   --pink1:#ffb3d9;
   --pink2:#ff7fc8;
+  --card:#ffffff;
+  --text:#8a0f44;
   --yes1:#ff4fa0;
   --yes2:#d81b72;
 }
 
 *{box-sizing:border-box}
-
 body{
   margin:0;
   min-height:100vh;
@@ -22,11 +23,13 @@ body{
   place-items:center;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
   background: linear-gradient(180deg, var(--pink1), var(--pink2));
+  overflow:hidden;
 }
 
+/* Main card */
 .card{
-  width:min(520px,92vw);
-  background:#fff;
+  width:min(560px,92vw);
+  background:var(--card);
   border-radius:22px;
   padding:26px 22px 22px;
   text-align:center;
@@ -34,33 +37,29 @@ body{
   position:relative;
 }
 
-/* Image circle */
+/* avatar circle (first screen) */
 .avatar{
-  width:70px;
-  height:70px;
+  width:70px; height:70px;
   border-radius:50%;
   overflow:hidden;
   margin:0 auto 10px;
   border:3px solid #ffd0e8;
 }
-.avatar img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
+.avatar img{width:100%;height:100%;object-fit:cover;display:block}
 
 h1{
   margin:0 0 14px;
   font-size:clamp(20px,4vw,28px);
-  color:#8a0f44;
+  color:var(--text);
 }
 
 .zone{
   position:relative;
   height:90px;
-  margin-top:10px;
+  margin-top:8px;
 }
 
+/* buttons */
 #yes{
   border:0;
   padding:14px 36px;
@@ -72,7 +71,6 @@ h1{
   box-shadow:0 12px 20px rgba(216,27,114,.25);
   cursor:pointer;
 }
-
 #no{
   position:absolute;
   left:65%;
@@ -85,24 +83,49 @@ h1{
   cursor:pointer;
 }
 
-.success{
-  display:none;
-  margin-top:16px;
-  padding:12px;
-  background:#e8fff1;
-  border-radius:14px;
-  border:1px solid #baf3cc;
-  color:#0e6b2c;
-  font-weight:600;
+/* YAY card (second screen) */
+.yay-title{
+  font-size:48px;
+  letter-spacing:1px;
+  margin:0;
+  color:#c2185b;
+  font-weight:900;
+}
+.big-heart{
+  font-size:54px;
+  margin:6px 0 10px;
+}
+.quote{
+  margin:0 auto 14px;
+  max-width: 360px;
+  color:#6f2a4a;
+  font-size:15px;
+  line-height:1.35;
+}
+.photo-box{
+  width: 180px;
+  height: 180px;
+  border-radius: 16px;
+  overflow:hidden;
+  margin: 10px auto 14px;
+  border: 1px solid #ffd0e8;
+  box-shadow: 0 10px 25px rgba(0,0,0,.12);
+}
+.photo-box img{
+  width:100%; height:100%;
+  object-fit:cover;
+}
+.fromline{
+  margin:0;
+  color:#6f2a4a;
+  font-size:14px;
 }
 
 /* Confetti */
 .confetti{position:fixed; inset:0; pointer-events:none;}
 .piece{
-  position:absolute;
-  top:-10px;
-  width:10px;
-  height:14px;
+  position:absolute; top:-10px;
+  width:10px; height:14px;
   border-radius:3px;
   animation:fall linear forwards;
 }
@@ -114,69 +137,88 @@ h1{
 
 <body>
 
-<div class="card">
+<!-- Screen 1 -->
+<div class="card" id="screenAsk">
   <div class="avatar">
     <img src="love.jpg" alt="">
   </div>
 
-  <h1>Mariomty, will you be my Valentine? 💗</h1>
+  <h1 id="askText">Mariomty, will you be my Valentine? 💗</h1>
 
   <div class="zone" id="zone">
     <button id="yes">Yes 💕</button>
     <button id="no">No</button>
   </div>
+</div>
 
-  <div class="success" id="success">
-    Yaaay 💞 You made my day 😌
+<!-- Screen 2 -->
+<div class="card" id="screenYay" style="display:none;">
+  <h2 class="yay-title">YAY!!!</h2>
+  <div class="big-heart">💖✨</div>
+  <p class="quote">The ring on your finger won't make you say no🥺</p>
+
+  <div class="photo-box">
+    <img src="love.jpg" alt="">
   </div>
+
+  <p class="fromline" id="fromLine">From Zozza, to Mariam 💕</p>
 </div>
 
 <div class="confetti" id="confetti"></div>
 
 <script>
+/* ===== EDIT HERE ===== */
+const ASK_NAME = "Mariomty";     // name in question
+const FROM_NAME = "Zozza";       // from
+const TO_NAME   = "Mariam";      // to
+const PHOTO_FILE = "love.jpg";   // image file in repo
+
+document.getElementById("askText").textContent = `${ASK_NAME}, will you be my Valentine? 💗`;
+document.getElementById("fromLine").textContent = `From ${FROM_NAME}, to ${TO_NAME} 💕`;
+
+// Make sure both images use the same photo
+document.querySelectorAll('img').forEach(img => img.src = PHOTO_FILE);
+
 const zone = document.getElementById("zone");
 const noBtn = document.getElementById("no");
 const yesBtn = document.getElementById("yes");
-const success = document.getElementById("success");
 const confetti = document.getElementById("confetti");
 
 function moveNo(){
   const z = zone.getBoundingClientRect();
   const pad = 6;
-
   const x = pad + Math.random()*(z.width - noBtn.offsetWidth - pad*2);
   const y = pad + Math.random()*(z.height - noBtn.offsetHeight - pad*2);
-
   noBtn.style.left = x+"px";
   noBtn.style.top  = y+"px";
   noBtn.style.transform = "translate(0,0)";
 }
 
+// NO runs away
 noBtn.addEventListener("mouseenter", moveNo);
-noBtn.addEventListener("touchstart", e=>{
-  e.preventDefault();
-  moveNo();
-},{passive:false});
+noBtn.addEventListener("touchstart", e=>{ e.preventDefault(); moveNo(); }, {passive:false});
 
+// YES switches screen
 yesBtn.addEventListener("click", ()=>{
-  success.style.display="block";
-  noBtn.style.display="none";
-  yesBtn.textContent="YES ✅";
-  yesBtn.disabled=true;
+  document.getElementById("screenAsk").style.display = "none";
+  document.getElementById("screenYay").style.display = "block";
   fireConfetti();
 });
 
+// Confetti burst
 function fireConfetti(){
+  confetti.innerHTML = "";
   const colors=["#ff4fa0","#ffd1e8","#ffb703","#8338ec","#3a86ff"];
-  for(let i=0;i<120;i++){
+  for(let i=0;i<140;i++){
     const d=document.createElement("div");
     d.className="piece";
     d.style.left=Math.random()*100+"vw";
     d.style.background=colors[Math.floor(Math.random()*colors.length)];
     d.style.animationDuration=(2+Math.random()*2)+"s";
+    d.style.animationDelay=(Math.random()*0.25)+"s";
     confetti.appendChild(d);
   }
-  setTimeout(()=>confetti.innerHTML="",5000);
+  setTimeout(()=>confetti.innerHTML="",5200);
 }
 </script>
 
